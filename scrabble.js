@@ -11,6 +11,9 @@ var Scrabble = {
     10: ["Q","Z"]
   },
 
+  letterDistribution: {
+      A: 9, B: 2, C: 2, D: 4, E: 12, F: 2, G: 3, H: 2, I: 9, J: 1, K: 1, L: 4, M: 2, N: 6, O: 8, P: 2, Q: 1, R: 6, S: 4, T: 6, U: 4, V: 2, W: 2, X: 1, Y: 2, Z: 1},
+
   // score(word): returns the total score value for the given word. The word is input as a  string (case insensitive).
   score: function(wordPlayed) {
     var score = 0;
@@ -123,7 +126,6 @@ module.exports = Scrabble;
 var Player = function(name) {
   this.name = name;
   this.plays = [];
-
 };
 
 //totalScore(): Function which sums up and returns the score of the players words
@@ -178,7 +180,6 @@ Player.prototype.highestWordScore = function() {
   var highestWordPlayedScore = Scrabble.score(highestWordPlayed);
   return highestWordPlayedScore;
 };
-
 
 console.log(">>>>>>>>>>>>");
 var sky = new Player("sky");
@@ -238,5 +239,69 @@ console.log("sky highest scoring word should be giraffe: " + highestPlayerWord);
 var highestPlayerWordScore = sky.highestWordScore();
 console.log("sky highest scoring word should be giraffe: " + highestPlayerWordScore);
 
+// //Constructor: Called when you use new TileBag()
+var TileBag = function(gameName) {
+  this.game = gameName;
+  this.bagOfTiles = [];
+};
+
+// should have the correct number of tiles of each letter
+TileBag.prototype.populateTiles = function() {
+  var letterDistributionKeys = Object.keys(Scrabble.letterDistribution);
+  var tbag = this.bagOfTiles;
+  letterDistributionKeys.forEach(function(value) {
+    var quantity = Scrabble.letterDistribution[value];
+
+    for (var i = 0; i < quantity; i++) {
+      tbag.push(value);
+    }
+  });
+  return tbag;
+};
+
+TileBag.prototype.randTile = function() {
+  var rand = Math.floor(Math.random() * this.bagOfTiles.length);
+  var tile = this.bagOfTiles[rand];
+  return tile;
+};
+
+// draw_tiles(num) returns num number of random tiles, removes the tiles from the default set.
+TileBag.prototype.drawTiles = function(num) {
+  var tilesDrawn = [];
+
+  for (var i = 0; i < num; i++) {
+    var tile = this.randTile();
+    tilesDrawn.push(tile);
+  }
+
+  for (var x = 0; x < tilesDrawn.length; x++) {
+    var index = this.bagOfTiles.indexOf(tilesDrawn[x]);
+    this.bagOfTiles.splice(index, 1);
+  }
+  return tilesDrawn;
+};
+
+TileBag.prototype.tilesRemaining = function() {
+  var tilesRemaining = this.bagOfTiles;
+  return tilesRemaining;
+};
+
+
+console.log(">>>>>>>>>>>>");
+var game1 = new TileBag("game1");
+
+var createTBag = game1.populateTiles();
+console.log("New Tile Bag created: " + createTBag);
+console.log("tile count: " + game1.bagOfTiles.length);
+
+
+var drawTile = game1.drawTiles(4);
+console.log("tiles you drew: " + drawTile);
+console.log("tiles count drawn: " + drawTile.length);
+
+
+var tilesLeft = game1.tilesRemaining();
+console.log("tiles left: " + tilesLeft);
+console.log("tiles count left: " + game1.bagOfTiles.length);
 
 module.exports = Scrabble;
