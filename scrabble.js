@@ -127,7 +127,7 @@ var Player = function(name) {
 };
 
 //totalScore(): Function which sums up and returns the score of the players words
-Player.prototype.totalScore = function(player) {
+Player.prototype.totalScore = function() {
   var playerWords = this.plays;
   var totalScore = 0;
 
